@@ -4,9 +4,9 @@
 
 ## About
 
-Official implementation of paper "*Grouped Discrete Representation for Object-Centric Learning*" available on [arXiv:2411.02299](https://arxiv.org/abs/2411.02299).
+Official implementation of ECML 2025 paper "*Grouped Discrete Representation for Object-Centric Learning*" available on [arXiv:2411.02299](https://arxiv.org/abs/2411.02299).
 
-**GDR is *re-implemented* upon codebase [VQ-VFM-OCL](https://github.com/Genera1Z/VQ-VFM-OCL). For more details, models, checkpoints, datasets and results, please visit this repo.**
+**Please note that this GDR is *re-implemented* upon codebase [VQ-VFM-OCL](https://github.com/Genera1Z/VQ-VFM-OCL), different from the version described in the paper. For more details, models, checkpoints, datasets and results, please visit this repo.**
 
 Quantative results:
 
@@ -87,7 +87,7 @@ I am now working on object-centric learning (OCL). If you have any cool ideas on
 
 ### Citation
 
-If you find this repo useful, place cite our work.
+If you find this repo useful, please cite our work.
 ```
 @article{zhao2025gdr,
   title={{Grouped Discrete Representation for Object-Centric Learning}},

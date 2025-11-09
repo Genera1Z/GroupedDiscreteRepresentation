@@ -1,4 +1,4 @@
-# GDR : Grouped Discrete Representation for Object-Centric Learning
+# `GDR` Grouped Discrete Representation for Object-Centric Learning
 
 
 

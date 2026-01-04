@@ -255,7 +255,7 @@ def parse_args():
     parser.add_argument(
         "--cfg_file",
         type=str,  # TODO XXX
-        default="config-slotdiffusion/vqvae-coco-c4-msf.py",
+        default="config-slotdiffusion/vqvae-coco-c4-gdr.py",
     )
     parser.add_argument(  # TODO XXX
         "--data_dir", type=str, default="/media/GeneralZ/Storage/Static/datasets"

@@ -23,8 +23,8 @@ Dataset [COCO](https://cocodataset.org) is available on [dataset-coco](https://g
 ## Model Checkpoints 🌟
 
 The checkpoints for the models are available.
-- [slate-gdr-coco](https://github.com/Genera1Z/GroupedDiscreteRepresentation/releases/tag/slate-gdr-coco): SLATE-GDR on COCO.
-- [slotdiffusion-gdr-coco](https://github.com/Genera1Z/GroupedDiscreteRepresentation/releases/tag/slotdiffusion-gdr-coco): SlotDiffusion-GDR on COCO.
+- [slate-gdr-coco](https://github.com/Genera1Z/GroupedDiscreteRepresentation/releases/tag/slate-gdr-coco): SLATE-GDR, i.e., `GDR-Tfd`, on COCO.
+- [slotdiffusion-gdr-coco](https://github.com/Genera1Z/GroupedDiscreteRepresentation/releases/tag/slotdiffusion-gdr-coco): SlotDiffusion-GDR, i.e., `GDR-Dfz`, on COCO.
 
 
 

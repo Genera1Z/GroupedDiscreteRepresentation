@@ -1,4 +1,3 @@
-from ..utils import register_module
 from .metric import (
     MetricWrap,
     CrossEntropyLoss,
@@ -9,7 +8,15 @@ from .metric import (
     mBO,
     mIoU,
 )
-from .optim import Adam, GradScaler, ClipGradNorm, ClipGradValue
+from .optim import (
+    Adam,
+    AdamW,
+    GradScaler,
+    ClipGradNorm,
+    ClipGradValue,
+    NAdam,
+    RAdam,
+)
 from .callback import Callback
 from .callback_log import AverageLog, SaveModel
 from .callback_sched import (
@@ -20,5 +27,3 @@ from .callback_sched import (
     CbLinearCosine,
     CbSquarewave,
 )
-
-[register_module(_) for _ in locals().values() if isinstance(_, type)]

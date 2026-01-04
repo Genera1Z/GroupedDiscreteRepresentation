@@ -6,9 +6,9 @@
 
 Official implementation of ECML 2025 paper "*Grouped Discrete Representation for Object-Centric Learning*" available on [arXiv:2411.02299](https://arxiv.org/abs/2411.02299).
 
-**Please note that this GDR is *re-implemented* upon codebase [VQ-VFM-OCL](https://github.com/Genera1Z/VQ-VFM-OCL), different from the version described in the paper. For more details, models, checkpoints, datasets and results, please visit this repo.**
+**Please note that this GDR is *re-implemented* upon codebase 🤗 [VQ-VFM-OCL](https://github.com/Genera1Z/VQ-VFM-OCL), different from the version described in the paper. For more details, models, checkpoints, datasets and results, please visit this repo.**
 
-Quantative results:
+Quantitative results of object discovery on COCO:
 
 <img src="res/quantitative_results.png" style="width:40%;">
 
@@ -22,65 +22,68 @@ Dataset [COCO](https://cocodataset.org) is available on [dataset-coco](https://g
 
 ## Model Checkpoints 🌟
 
-The checkpoints for all models are available.
-- [slate-gdr-coco](https://github.com/Genera1Z/GroupedDiscreteRepresentation/releases/tag/slate-gdr-coco): SLATE with GDR on COCO.
-- [slotdiffusion-gdr-coco](https://github.com/Genera1Z/GroupedDiscreteRepresentation/releases/tag/slotdiffusion-gdr-coco): SlotDiffusion with GDR on COCO.
+The checkpoints for the models are available.
+- [slate-gdr-coco](https://github.com/Genera1Z/GroupedDiscreteRepresentation/releases/tag/slate-gdr-coco): SLATE-GDR on COCO.
+- [slotdiffusion-gdr-coco](https://github.com/Genera1Z/GroupedDiscreteRepresentation/releases/tag/slotdiffusion-gdr-coco): SlotDiffusion-GDR on COCO.
 
 
 
 ## How to Use
 
-#### (1) Install requirements
+Take SLATE-GDR on COCO as an example.
 
-(Using Python version 3.11)
+**(1) Environment**
+
+To set up the environment, run:
 ```shell
+# python 3.11
 pip install -r requirements.txt
 ```
-Use package versions no older than the specification.
 
-#### (2) Prepare datasets (or use converted datasets)
+**(2) Dataset**
 
-Convert original datasets into LMDB format: 
+To prepare the dataset, download ***Converted Datasets*** and unzip to `path/to/your/dataset/`. Or convert them by yourself according to ```XxxDataset.convert_dataset()``` docs.
+
+**(3) Train**
+
+To train the model, run:
 ```shell
-python convert.py
-```
-But **firstly** download original datasets according to docs of ```XxxDataset.convert_dataset()```.
+# 1. pretrain the GDR VAE module
+python train.py \
+    --seed 42 \
+    --cfg_file config-slatesteve/vqvae-coco-c256-gdr.py \
+    --data_dir path/to/your/dataset \
+    --save_dir save
 
-#### (3) Pretrain and train
-
-Run training:
-```shell
-python train.py
-```
-But **firstly** change the arguments marked with ```TODO XXX``` to your needs.
-
-Specifically on training:
-- For SLATE/STEVE, there are two stages for training. For example,
-```shell
-# 1. pretrain the VAE module
-python train.py --cfg_file config-slatesteve/vqvae-coco-c256-gdr.py
 # *. place the best VAE checkpoint at archive-slatesteve/vqvae-coco-c256-gdr/best.pth
 mv save archive-slatesteve
-# 2. train the OCL model
-python train.py --cfg_file config-slatesteve/slate_r_vqvae-gdr-coco.py --ckpt_file archive-slatesteve/vqvae-coco-c256-gdr/best.pth
+
+# 2. train the SLATE-GDR OCL model
+python train.py \
+    --seed 42 \
+    --cfg_file config-slatesteve/slate_r_vqvae-coco-gdr.py \
+    --data_dir path/to/your/dataset \
+    --save_dir save \
+    --ckpt_file archive-slatesteve/vqvae-coco-c256-gdr/best.pth
 ```
 
+**(4) Evaluate**
 
-
-#### (4) Evaluate
-
-Run evaluation:
+To evaluate the model, run:
 ```shell
-python eval.py
+python eval.py \
+    --cfg_file config-slatesteve/slate_r_vqvae-coco-gdr.py \
+    --data_dir path/to/your/dataset \
+    --ckpt_file archive-slatesteve/slate_r_vqvae-coco-gdr/best.pth \
+    --is_viz True
+# object discovery accuracy values will be printed in the terminal
+# object discovery visualization will be saved to ./slate_r_vqvae-coco-gdr/
 ```
-Remember **firstly** modify the script according to your need.
 
+### Support
 
-
-### About
-
-I am now working on object-centric learning (OCL). If you have any cool ideas on OCL or issues about this repo, just contact me.
-- WeChat: Genera1Z
+If you have any issues on this repo or cool ideas on OCL, please do not hesitate to contact me!
+- page: https://genera1z.github.io
 - email: rongzhen.zhao@aalto.fi, zhaorongzhenagi@gmail.com
 
 

@@ -3,7 +3,19 @@ import torch.nn.utils.clip_grad as ptnucg
 import torch.optim as pto
 
 
+SGD = pto.SGD
+
+
 Adam = pto.Adam
+
+
+AdamW = pto.AdamW
+
+
+NAdam = pto.NAdam
+
+
+RAdam = pto.RAdam
 
 
 ####

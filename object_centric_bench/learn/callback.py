@@ -1,4 +1,4 @@
-from ..utils import Compose
+from ..util import Compose
 
 
 class Callback:
@@ -48,12 +48,3 @@ class Callback:
 
     def after_train(self, **pack):
         return pack
-
-    # @staticmethod
-    # def compose(funcs):
-    #     def func(**kwds):
-    #         for _ in funcs:
-    #             _(**kwds)  # ``kwds``: modified inplace
-    #         return kwds
-
-    #     return func

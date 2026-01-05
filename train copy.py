@@ -180,7 +180,7 @@ def main(args):
         model.freez(cfg.freez)
 
     model = model.cuda()
-    model.compile()  # TODO XXX comment this for debugging
+    # model.compile()  # TODO XXX comment this for debugging
 
     ## learn init
 
@@ -251,12 +251,12 @@ def parse_args():
     parser.add_argument(
         "--seed",
         type=int,
-        default=42,  # TODO XXX 42 43 44
+        default=42,  # TODO XXX
     )
     parser.add_argument(
         "--cfg_file",
         type=str,  # TODO XXX
-        default="config-slotdiffusion/vqvae-coco-c4-gdr.py",
+        default="config-slotdiffusion/vqvae-coco-c4.py",
     )
     parser.add_argument(  # TODO XXX
         "--data_dir", type=str, default="/media/GeneralZ/Storage/Static/datasets"

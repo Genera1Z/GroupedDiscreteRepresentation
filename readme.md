@@ -9,7 +9,7 @@
 
 Please check our brand new OCL works:
 - **[RandSF.Q](https://github.com/Genera1Z/RandSF.Q)**: significantly surpasses state-of-the-art video OCL, e.g., **SlotContrast**, by **up to 10 points**!
-- **[SmoothSA](https://github.com/Genera1Z/SmoothSA)**: improves the state of the art, e.g., **SPOT** / **DIAS** (images) and **SlotContrast** / **RandSF.Q** (videos), **even further** with **minimal modifications**!
+- **[SmoothSA](https://github.com/Genera1Z/SmoothSA)**: improves the state of the art **even further**, e.g., **SPOT** / **DIAS** (images) and **SlotContrast** / **RandSF.Q** (videos), with **minimal modifications**!
 
 <br>
 <br>

@@ -14,7 +14,7 @@ env/
 archive-*
 
 *sh
-_*.py
+_0_*.py
 
 save
 

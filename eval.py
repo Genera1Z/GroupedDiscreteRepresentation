@@ -191,7 +191,7 @@ def parse_args():
     parser.add_argument(
         "--ckpt_file",
         type=Path,  # TODO XXX
-        default="/home/GeneralZ/Downloads/slotdiffusion-gdr-coco/slotdiffusion_r_vqvae-coco-gdr/best2.pth",
+        default="archive-slotdiffusion/slotdiffusion_r_vqvae-coco-gdr/best.pth",
     )
     parser.add_argument(
         "--is_viz",

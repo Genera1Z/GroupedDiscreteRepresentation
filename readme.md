@@ -97,12 +97,6 @@ python eval.py \
 # object discovery visualization will be saved to ./slate_r_vqvae-coco-gdr/
 ```
 
-## Support
-
-If you have any issues on this repo or cool ideas on OCL, please do not hesitate to contact me!
-- page: https://genera1z.github.io
-- email: rongzhen.zhao@aalto.fi, zhaorongzhenagi@gmail.com
-
 
 
 ## Citation

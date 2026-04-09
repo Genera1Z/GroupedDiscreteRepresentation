@@ -33,7 +33,7 @@ Quantitative results of object discovery on COCO: (Encoding with backbone **DINO
 
 ## Converted Datasets 🚀
 
-Dataset [COCO](https://cocodataset.org) is available on [dataset-coco](https://github.com/Genera1Z/VQ-VFM-OCL/releases/tag/dataset-coco), which is converted in LMDB database format and can be used off-the-shelf in this repo.
+Dataset [COCO](https://cocodataset.org) is available on [dataset-coco](https://github.com/Genera1Z/VQ-VFM-OCL/releases/tag/dataset-coco), which is converted into LMDB database format and can be used off-the-shelf in this repo.
 
 
 

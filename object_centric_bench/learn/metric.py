@@ -64,15 +64,28 @@ class Metric(ABC, nn.Module):
             assert 0 not in mean  # batch/first dimension should not be included
         self.mean = mean
 
-    @abstractmethod
     def forward(self, *args, **kwds) -> tuple:
-        ...
-        metric, valid = self.finaliz(...)
-        return metric, valid  # loss/acc (b,..), valid (b,)
+        if len(args) > 0:
+            first_input_tensor = args[0]
+        elif len(kwds) > 0:
+            first_input_tensor = list(kwds.values())[0]
+        else:
+            raise ValueError
+        assert isinstance(first_input_tensor, pt.Tensor)
 
-    def finaliz(self, metric, valid=None) -> tuple:
+        num = first_input_tensor.size(0)
+        dtype = first_input_tensor.dtype
+        device = first_input_tensor.device
+
+        if num > 0:
+            metric, valid = self.compute(*args, **kwds)
+            if valid is None:
+                valid = pt.ones(metric.size(0), dtype=pt.bool, device=device)
+        else:
+            metric = pt.tensor([], dtype=dtype, device=device)
+            valid = pt.tensor([], dtype=pt.bool, device=device)
+
         """mean ``metric`` along dimensions ``self.mean``; flag ``valid`` samples
-
         - metric: shape=(b,..); dtype=float
         - valid: shape=(b,); dtype=bool
         """
@@ -85,11 +98,11 @@ class Metric(ABC, nn.Module):
                 metric2 = metric
         else:
             metric2 = metric.mean(self.mean)  # (b,..)
-        if valid is not None:
-            valid2 = valid
-        else:
-            valid2 = pt.ones(metric.size(0), dtype=pt.bool, device=metric.device)
-        return metric2, valid2
+
+        return metric2, valid  # loss/acc (b,..), valid (b,)
+
+    def compute(self, *args, **kwds) -> tuple:
+        raise NotImplemented  # metric, valid
 
 
 ####
@@ -98,7 +111,7 @@ class Metric(ABC, nn.Module):
 class CrossEntropyLoss(Metric):
     """``nn.CrossEntropyLoss``."""
 
-    def forward(self, input, target):
+    def compute(self, input, target):
         """
         - input: shape=(b,c,..), dtype=float
         - target: shape=(b,..), dtype=int64;
@@ -106,7 +119,7 @@ class CrossEntropyLoss(Metric):
         """
         # loss = ptnf.cross_entropy(input, target, reduction="none")  # (b,..)
         loss = ptnf.cross_entropy(input, target)[None]  # (b=1,)
-        return self.finaliz(loss)  # (b,) (b,)
+        return loss, None  # (b,) (b,)
 
 
 class CrossEntropyLossGrouped(CrossEntropyLoss):
@@ -116,7 +129,7 @@ class CrossEntropyLossGrouped(CrossEntropyLoss):
         super().__init__(mean)
         self.groups = groups
 
-    def forward(self, input, target):
+    def compute(self, input, target):
         """
         input: shape=(b,g*c,..), dtype=float
         target: shape=(b,g,..), dtype=int64
@@ -131,18 +144,18 @@ class CrossEntropyLossGrouped(CrossEntropyLoss):
             loss.append(ce)
         assert end == input.size(1)
         loss_sum = sum(_[0] for _ in loss)  # (b,..)
-        return self.finaliz(loss_sum)  # (b,) (b,)
+        return loss_sum, None  # (b,) (b,)
 
 
 class MSELoss(Metric):
     """``nn.MSELoss``."""
 
-    def forward(self, input, target):
+    def compute(self, input, target):
         assert input.ndim == target.ndim >= 1
         # TODO XXX why outside-mean is no better than builtin-mean ??? TODO XXX
         # loss = ptnf.mse_loss(input, target, reduction="none")  # (b,..)
         loss = ptnf.mse_loss(input, target)[None]  # (b=1,)
-        return self.finaliz(loss)  # (b,) (b,)
+        return loss, None  # (b,) (b,)
 
 
 class LPIPSLoss(Metric):
@@ -156,7 +169,7 @@ class LPIPSLoss(Metric):
         self.lpips.compile()
         # self.lpips = pt.quantization.quantize_dynamic(self.lpips)  # slow
 
-    def forward(self, input, target):
+    def compute(self, input, target):
         """
         input: shape=(b,c,h,w), dtype=float
         target: shape=(b,c,h,w), dtype=float
@@ -166,7 +179,7 @@ class LPIPSLoss(Metric):
         self.lpips.to(input.device)  # to the same device, won't repeat once done
         # lpips = self.lpips(target, input)  # (b,c,h,w)
         lpips = self.lpips(target, input).mean()[None]  # (b=1,)
-        return self.finaliz(lpips)  # (b,) (b,)
+        return lpips, None  # (b,) (b,)
 
 
 ####
@@ -179,7 +192,7 @@ class ARI(Metric):
         super().__init__(mean)
         self.skip = pt.from_numpy(np.array(skip, "int64"))
 
-    def forward(self, input, target):
+    def compute(self, input, target):
         """
         - input: shape=(b,n,c), onehot segment
         - target: shape=(b,n,d), onehot segment
@@ -190,7 +203,7 @@ class ARI(Metric):
             target = __class__.skip_segment(target, self.skip)
         ari = __class__.adjusted_rand_index(input, target)  # (b,)
         valid = ARI.find_valid(target)  # (b,)
-        return self.finaliz(ari, valid)  # (b,) (b,)
+        return ari, valid
 
     @pt.inference_mode()
     @staticmethod
@@ -256,7 +269,7 @@ class mBO(Metric):
         super().__init__(mean)
         self.skip = pt.from_numpy(np.array(skip, "int64"))
 
-    def forward(self, input, target):
+    def compute(self, input, target):
         """
         - input: shape=(b,n,c), onehot segment
         - target: shape=(b,n,d), onehot segment
@@ -267,7 +280,7 @@ class mBO(Metric):
             target = ARI.skip_segment(target, self.skip)
         mbo = __class__.mean_best_overlap(input, target)  # (b,)
         valid = ARI.find_valid(target)  # (b,)
-        return self.finaliz(mbo, valid)  # (b,) (b,)
+        return mbo, valid
 
     @pt.inference_mode()
     @staticmethod
@@ -292,7 +305,7 @@ class mIoU(Metric):
         super().__init__(mean)
         self.skip = pt.from_numpy(np.array(skip, "int64"))
 
-    def forward(self, input, target):
+    def compute(self, input, target):
         """
         input: shape=(b,n,c), onehot segment
         target: shape=(b,n,d), onehot segment
@@ -303,7 +316,7 @@ class mIoU(Metric):
             target = ARI.skip_segment(target, self.skip)
         miou = __class__.mean_intersection_over_union(input, target)  # (b,)
         valid = ARI.find_valid(target)  # (b,)
-        return self.finaliz(miou, valid)  # (b,) (b,)
+        return miou, valid
 
     @pt.inference_mode()
     @staticmethod
